@@ -23,7 +23,7 @@ body {
     height: 100%;
   
     /* 背景画像（ラボの指示に合わせて必要ならファイル名を調整） */
-    background: url("/static/images/background.jpg") no-repeat center center / cover;
+    background: url("/static/background-color.jpg") no-repeat center center / cover;
   
     filter: blur(8px);
     transform: scale(1.05); /* ぼかしの端の欠け対策 */

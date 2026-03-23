@@ -5,13 +5,14 @@ import {urlConfig} from '../../config';
 import { useAppContext } from '../../context/AuthContext';
 
 const Profile = () => {
-  const [userDetails, setUserDetails] = useState({});
+ const [userDetails, setUserDetails] = useState({});
  const [updatedDetails, setUpdatedDetails] = useState({});
  const {setUserName} = useAppContext();
  const [changed, setChanged] = useState("");
 
  const [editMode, setEditMode] = useState(false);
-  const navigate = useNavigate();
+ const navigate = useNavigate();
+ const [showerr, setShowerr] = useState("");
   useEffect(() => {
     const authtoken = sessionStorage.getItem("auth-token");
     if (!authtoken) {
@@ -57,7 +58,7 @@ const handleSubmit = async (e) => {
   try {
     const authtoken = sessionStorage.getItem("auth-token");
     const email = sessionStorage.getItem("email");
-
+    setShowerr("");
     if (!authtoken || !email) {
       navigate("/app/login");
       return;
@@ -66,29 +67,38 @@ const handleSubmit = async (e) => {
     const payload = { ...updatedDetails };
     const response = await fetch(`${urlConfig.backendUrl}/api/auth/update`, {
       //Step 1: Task 1
+      method: 'PUT',
       //Step 1: Task 2
+      headers: {
+       'content-type': 'application/json',
+       'email': email,
+      },
       //Step 1: Task 3
+      body: JSON.stringify(payload),
     });
 
     if (response.ok) {
       // Update the user details in session storage
       //Step 1: Task 4
+      setUserName(updatedDetails.name);
       //Step 1: Task 5
+      sessionStorage.setItem('name', updatedDetails.name);
       setUserDetails(updatedDetails);
       setEditMode(false);
       // Display success message to the user
       setChanged("Name Changed Successfully!");
       setTimeout(() => {
         setChanged("");
-        navigate("/");
+        navigate("/app");
       }, 1000);
 
     } else {
-      // Handle error case
-      throw new Error("Failed to update profile");
+       setShowerr("Failed to update profile");
+       // Handle error case
     }
   } catch (error) {
     console.error(error);
+     setShowerr("Failed to update profile");
     // Handle error case
   }
 };
@@ -126,6 +136,7 @@ return (
 <span style={{color:'green',height:'.5cm',display:'block',fontStyle:'italic',fontSize:'12px'}}>{changed}</span>
 </div>
 )}
+<div className="text-danger">{showerr}</div>
 </div>
 );
 };

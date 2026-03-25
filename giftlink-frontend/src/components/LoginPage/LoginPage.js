@@ -30,7 +30,7 @@ function LoginPage() {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          　'Authorization': `Bearer ${bearerToken}`
+          'Authorization': `Bearer ${bearerToken}`
         },
         body: JSON.stringify({
           email: email,
